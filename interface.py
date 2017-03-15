@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 """
 Usage:
-    Ticket_Booking create_events 
-    Ticket_Booking (-i | --interactive)
-    Ticket_Booking(-h | --help | --version)
+    interface.py create_events <event_name> <event_start_date> <event_end_date> <event_venue> [--timeout=<seconds>]
+    interface.py delete_event <id>
+    interface.py edit_event <id> <event_name> <event_start_date> <event_end_date> <event_venue>
+    interface.py list_events
+    interface.py view_event
+    interface.py generate_tickets
+    interface.py ticket_invalidate 
+    interface.py (-i | --interactive)
+    interface.py (-h | --help | --version)
 
 Options:
     -i, --interactive  Interactive Mode
@@ -14,7 +20,7 @@ import sys
 import cmd
 from docopt import docopt, DocoptExit
 
-import methods
+import functions
 
 
 
@@ -51,53 +57,67 @@ def docopt_cmd(func):
 
 class MyTicketBookingService (cmd.Cmd):
     intro = 'Welcome to my Ticket Booking Service' \
-        + ' (type help for a list of commands.)'
+    + ' (type help for a list of commands.)'
     prompt = '(my_ticket_booking_service) '
     file = None
 
     @docopt_cmd
-    def do_create_event(self, args):
+    def do_create_events(self, args):
         """Usage: create_events <event_name> <event_start_date> <event_end_date> <event_venue> [--timeout=<seconds>]"""
         event_name=args['<event_name>']
         event_start_date=args['<event_start_date>']
         event_end_date=args['<event_end_date>']
         event_venue=args['<event_venue>']
 
-        print (self.create_events.create_event(event_name,event_start_date,event_end_date,event_venue))
+        print (functions.create_events(event_name,event_start_date,event_end_date,event_venue))
 
     @docopt_cmd
-    def do_delete_events(self, arg):
-        """Usage: edit_events <event_id> [--timeout=<seconds>]"""
+    def do_delete_event(self, arg):
+        """Usage: delete_event <event_id>"""
+        event_id=arg['<event_id>']
 
-        print(arg)
+        print(functions.delete_event(event_id))
 
-    def do_edit_events(self, arg):
-        """Usage: edit_events <event_id> [--timeout=<seconds>]"""
+    @docopt_cmd
+    def do_edit_event(self, args):
+        """Usage: edit_event <event_id> <event_name> <event_start_date> <event_end_date> <event_venue>"""
+        event_id=args['<event_id>']
+        event_name=args['<event_name>']
+        event_start_date=args['<event_start_date>']
+        event_end_date=args['<event_end_date>']
+        event_venue=args['<event_venue>']
 
-        print(arg)
 
+        print(functions.edit_event(event_id, event_name, event_start_date, event_end_date, event_venue))
+
+    @docopt_cmd
     def do_list_events(self, arg):
-        """Usage: list_events <event_id> [--timeout=<seconds>]"""
+        """Usage: list_events"""
 
-        print(arg)
 
+        print(functions.list_events())
+
+    @docopt_cmd
     def do_view_events(self, arg):
         """Usage: view_events <event_id> [--timeout=<seconds>]"""
 
         print(arg)
 
+    @docopt_cmd
     def do_generate_tickets(self, arg):
         """Usage: generate_tickets <email> <ticket_id> [--timeout=<seconds>]"""
 
         print(arg)
 
 
+    @docopt_cmd
     def do_ticket_invalidate(self, arg):
         """Usage: tickets_invalidate <ticket_id> [--timeout=<seconds>]"""
 
         print(arg)
 
 
+    @docopt_cmd
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
 
