@@ -4,6 +4,7 @@ import smtplib
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from database import Events, Tickets, Base
+from tabulate import tabulate
 
 
  
@@ -114,15 +115,14 @@ def generate_tickets(email, event_name):
 
 
 		server = smtplib.SMTP('smtp.gmail.com', 587)
-		server.ehlo()
 		server.starttls()
 		
 		#Next, log in to the server
-		server.login("evalyne", "0716664041")
+		server.login("ndanuevalyne@gmail.com", "0716664041")
 		#Send the mail
 		msg = "TICKET GENERATED"
 		server.sendmail("ndanuevalyne12@gmail.com", email, msg)
-		server.close()
+		server.quit()
 
 
 		print("Email has successfully been sent")
@@ -137,10 +137,11 @@ def generate_tickets(email, event_name):
 def ticket_invalidate(event_name):
 
 	"""invalidates a ticket"""
-	ticket=session.query(Tickets).filter(Tickets.id == ticket_id).first()
-	ticket.ticket_status = 'invalid'
+	event_name=session.query(Events).filter(Events.event_name == event_name).all()
+	if len(event_name)>0:
+		invalid_ticket = Tickets()
+		invalid_ticket.event_name = event_name
+		session.execute(invalid_ticket)
+		session.commit()
 
-	
-	session.commit()
-
-	return ("Ticket has been invalidated")
+		return ("Ticket has been invalidated")

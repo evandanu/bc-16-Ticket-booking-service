@@ -24,7 +24,7 @@ class Tickets(Base):
     __tablename__ = 'tickets'
     id = Column(Integer, primary_key=True)
     event_id = Column(Integer, ForeignKey('create_events.id'))
-    ticket_status = Column(String(250), nullable=False, default='valid')
+    ticket_status = Column(String(250), default='valid')
     
  
 # Create an engine that stores data in the local directory's

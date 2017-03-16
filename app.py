@@ -21,6 +21,7 @@ import cmd
 from docopt import docopt, DocoptExit
 
 import functions
+from tabulate import tabulate
 
 
 
@@ -70,7 +71,6 @@ class MyTicketBookingService (cmd.Cmd):
         event_venue=args['<event_venue>']
 
         print (functions.create_events(event_name,event_start_date,event_end_date,event_venue))
-
     @docopt_cmd
     def do_delete_event(self, arg):
         """Usage: delete_event <event_id>"""
@@ -95,7 +95,7 @@ class MyTicketBookingService (cmd.Cmd):
         """Usage: list_events"""
 
 
-        print(functions.list_events())
+        print(tabulate(functions.list_events(), headers=["id", "event_name", "event_start_date", "event_end_date", "event_venue"], tablefmt='orgtbl'))
 
     @docopt_cmd
     def do_view_ticket(self, arg):
