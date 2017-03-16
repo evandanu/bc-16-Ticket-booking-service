@@ -17,12 +17,14 @@ class Events(Base):
     event_start_date=Column(String(250), nullable=False)
     event_end_date = Column(String(250), nullable=False)
     event_venue = Column(String(250), nullable=False)
+    tickets = relationship('Tickets', backref='create_events',
+                                lazy='dynamic')
 
 class Tickets(Base):
     __tablename__ = 'tickets'
     id = Column(Integer, primary_key=True)
     event_id = Column(Integer, ForeignKey('create_events.id'))
-    tickets = relationship('Events')
+    ticket_status = Column(String(250), nullable=False, default='valid')
     
  
 # Create an engine that stores data in the local directory's

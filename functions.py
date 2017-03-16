@@ -1,5 +1,6 @@
 import os
 import sys
+import smtplib
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from database import Events, Tickets, Base
@@ -26,6 +27,7 @@ session = DBSession()
 events = []
 
 
+
 def create_events(event_name,event_start_date,event_end_date,event_venue):
 	if (event_name == events):
 
@@ -49,7 +51,7 @@ def delete_event(event_id):
 
 def edit_event(event_id,event_name,event_start_date,event_end_date,event_venue):
 
-	new_event_details = update(Events). where (Events.id == event_id).values\
+	new_event_details = update(Events). where (Events.id == event_id).values
 	({'event_name': event_name, 'event_start_date': event_start_date, 'event_end_date': event_end_date, 'event_venue': event_venue}).execute()
 	session.commit()
 
@@ -85,16 +87,60 @@ def list_events():
 
 def view_ticket(event_id):
 
-	if (view_event==session.query(Events).filter(event_id=event_id)):
-		
-		session.view(view_event)
-		session.commit()
+	
 
-		return (event_id)
+	if (view_ticket==session.query(Tickets).filter_by(event_id=int(event_id))):
+		
+		session.view(view_ticket)
+
+		return (view_ticket)
 
 	else:
 		return ("Invalid event_id")
 
 
+def generate_tickets(email, event_name):
+
+	"""generate tickets and sends them to the specified email"""
+
+	events=session.query(Events).filter(Events.event_name == event_name).all()
+
+	if len(events)>0:
+		event_id = events[0].id
+		new_ticket = Tickets()
+		new_ticket.event_id = event_id
+		session.add(new_ticket)
+		session.commit()
 
 
+		server = smtplib.SMTP('smtp.gmail.com', 587)
+		server.ehlo()
+		server.starttls()
+		
+		#Next, log in to the server
+		server.login("evalyne", "0716664041")
+		#Send the mail
+		msg = "TICKET GENERATED"
+		server.sendmail("ndanuevalyne12@gmail.com", email, msg)
+		server.close()
+
+
+		print("Email has successfully been sent")
+
+
+		#return send_mail(email, event_id)
+
+	else:
+
+		return ("Event name does not exist or invalid email")
+
+def ticket_invalidate(event_name):
+
+	"""invalidates a ticket"""
+	ticket=session.query(Tickets).filter(Tickets.id == ticket_id).first()
+	ticket.ticket_status = 'invalid'
+
+	
+	session.commit()
+
+	return ("Ticket has been invalidated")
