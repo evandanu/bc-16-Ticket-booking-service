@@ -5,7 +5,7 @@ Usage:
     interface.py delete_event <id>
     interface.py edit_event <id> <event_name> <event_start_date> <event_end_date> <event_venue>
     interface.py list_events
-    interface.py view_ticket <event_id>
+    interface.py view_tickets <event_id>
     interface.py generate_tickets <email> <event_name>
     interface.py ticket_invalidate <event_id>
     interface.py (-i | --interactive)
@@ -98,11 +98,11 @@ class MyTicketBookingService (cmd.Cmd):
         print(tabulate(functions.list_events(), headers=["id", "event_name", "event_start_date", "event_end_date", "event_venue"], tablefmt='orgtbl'))
 
     @docopt_cmd
-    def do_view_ticket(self, arg):
-        """Usage: view_ticket <event_id>"""
+    def do_view_tickets(self, arg):
+        """Usage: view_tickets <event_id>"""
         event_id=arg['<event_id>']
 
-        print(functions.view_ticket(event_id))
+        print(tabulate(functions.view_tickets(event_id), headers=["id", "event_id", "ticket_status"], tablefmt='orgtbl'))
 
     @docopt_cmd
     def do_generate_tickets(self,arg):
@@ -118,11 +118,12 @@ class MyTicketBookingService (cmd.Cmd):
 
     @docopt_cmd
     def do_ticket_invalidate(self, arg):
-        """Usage: tickets_invalidate <ticket_id> [--timeout=<seconds>]"""
-        ticket_id=arg['<ticket_id>']
+        """Usage: tickets_invalidate <event_id>"""
+        event_id=arg['<event_id>']
+      
 
 
-        print(functions.ticket_invalidate(ticket_id))
+        print(functions.ticket_invalidate(event_id))
 
 
     @docopt_cmd

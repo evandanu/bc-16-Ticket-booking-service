@@ -26,6 +26,7 @@ session = DBSession()
 # Insert a Event in the events table
 #create a method for the create_event
 events = []
+tickets = []
 
 
 
@@ -52,11 +53,14 @@ def delete_event(event_id):
 
 def edit_event(event_id,event_name,event_start_date,event_end_date,event_venue):
 
-	new_event_details = update(Events). where (Events.id == event_id).values
-	({'event_name': event_name, 'event_start_date': event_start_date, 'event_end_date': event_end_date, 'event_venue': event_venue}).execute()
-	session.commit()
+	if (event_id== event_id):
 
-	return ("Event successfully editted")
+		new_event_details = update(Events). where (Events.id == event_id).values\
+		({'event_name': event_name, 'event_start_date': event_start_date, 'event_end_date': event_end_date, 'event_venue': event_venue})
+		session.execute(new_event_details)
+		session.commit()
+
+		return ("Event successfully editted")
 
 
 
@@ -86,19 +90,26 @@ def list_events():
 
 
 
-def view_ticket(event_id):
+def view_tickets(event_id):
 
+	view_tickets= session.query(Tickets).all()
+	view_ticket=[]
+	length=0
+	ticket=[]
+
+	for view_ticket in view_tickets:
+		view_ticket1=[view_ticket.id, view_ticket.event_id, view_ticket.ticket_status]
+		ticket.append(view_ticket1)
+		length += 1
+
+	if (length>0):
 	
-
-	if (view_ticket==session.query(Tickets).filter_by(event_id=int(event_id))):
-		
-		session.view(view_ticket)
-
-		return (view_ticket)
+		return (ticket)
 
 	else:
-		return ("Invalid event_id")
 
+	    return ("No events available")
+	
 
 def generate_tickets(email, event_name):
 
@@ -134,14 +145,12 @@ def generate_tickets(email, event_name):
 
 		return ("Event name does not exist or invalid email")
 
-def ticket_invalidate(event_name):
+def ticket_invalidate(event_id):
 
 	"""invalidates a ticket"""
-	event_name=session.query(Events).filter(Events.event_name == event_name).all()
-	if len(event_name)>0:
-		invalid_ticket = Tickets()
-		invalid_ticket.event_name = event_name
-		session.execute(invalid_ticket)
-		session.commit()
+	invalid_ticket= update (Tickets). where(Tickets.id == event_id ).values
+	({'ticket_status': 'invalid'})
+	session.execute(invalid_ticket)
+	session.commit()
 
-		return ("Ticket has been invalidated")
+	return ("Ticket has been invalidated")

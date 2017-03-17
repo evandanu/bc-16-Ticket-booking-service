@@ -7,13 +7,13 @@ $gitclone https://github.com/evandanu/bc-16-Ticket-booking-service
 
 $cd bc-16-Ticket-booking-service
 
-# Create a virtual environment #
+## Create a virtual environment ##
 
 $python -m virtualenv project
 $project\Scripts\activate
 $cd bc-16-Ticket-booking-service
 
-# Install sqlalchemy and docopt to the virtual environment #
+## Install sqlalchemy and docopt to the virtual environment ##
 
 $python -m pip install sqlalchemy
 $python -m pip install docopt
